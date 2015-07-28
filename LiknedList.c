@@ -1,27 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define SWAP(a,b)   do{                     \
+                     if(a!=b){              \
+                       a^=b; b^=a; a^=b;    \
+                     }                      \
+                    }while(0)               \
+
 typedef struct _node{
     int val;
     struct _node *next;
 } node;
 
-node *HEAD = NULL;   /* GLOBAL variable */
+node *head = NULL,
+     *curr = NULL;
 
-node* Create_LinkedList(int, node*);
-node* Append_LinkedList(int, node*);
-node* Prepend_LinkedList(int, node*);
-node* Delete_Node(int, node*);
-node* Reverse_LinkedList(node*);
-int Length_Of_LinkedList(node*);
-int Delete_LinkedList(node*);
-int Print_LinkedList(node*);
-int Search_LinkedList(int, node*, node**);
-node* Last_Node(node*);
+/* functions */
+int Print_LinkedList();                /* return 1 on success */
+node* Create_Linked_list(int);
+node* Append_Linked_list(int);
+node* Prepend_Linked_list(int);
+int Search_Linked_list(int, node**); /* pass **prev to get prev element address */
+node* Delete_Node(int);                /* delete the first found element */
+node* Reverse_Linked_list();
+int Length_Of_Linked_list();
+int Delete_Linked_list();
 
 int main(void){
     int Option = 1;
-    int Val;
+    int Value;
     while(Option){
         printf("1) Create linked-list\n2) Append linked-list\n3) Prepend linked-list\n4) Length Of linked-list\n5) Delete a node\n6) Reverse linked-list\n7) Delete linked-list\n8)Print linked-list\n0) Exit program\n");
         scanf("%d", &Option);
@@ -29,45 +36,45 @@ int main(void){
         switch(Option){
             case 1:
                 printf("Enter a value: ");
-                scanf("%d", Val);
-                Create_LinkedList(Val, HEAD);
+                scanf("%d", Value);
+                Create_Linked_list(Value);
                 printf("Linked-list created\n\n");
                 break;
             case 2:
                 printf("Enter a value: ");
-                scanf("%d", Val);
-                HEAD = Append_LinkedList(Val, HEAD);
+                scanf("%d", Value);
+                Append_Linked_list(Value);
                 printf("Value appended to Linked-list\n\n");
                 break;
             case 3:
                 printf("Enter a value: ");
-                scanf("%d", Val);
-                HEAD = Prepend_LinkedList(Val, HEAD);
+                scanf("%d", Value);
+                Prepend_Linked_list(Value);
                 printf("Value prepended to Linked-list\n\n");
                 break;
             case 4:
-                Val = Length_Of_LinkedList(HEAD);
-                printf("Linked-list length: %d\n\n", Val);
+                Value = Length_Of_Linked_list();
+                printf("Linked-list length: %d\n\n", Value);
                 break;
             case 5:
                 printf("Enter a value: ");
-                scanf("%d", Val);
-                HEAD = Delete_Node(Val, HEAD);
+                scanf("%d", Value);
+                Delete_Node(Value);
                 printf("Value deleted from linked-list\n\n");
                 break;
             case 6:
-                HEAD = Reverse_LinkedList(HEAD);
+                Reverse_Linked_list();
                 printf("Linked-list reversed\n\n");
                 break;
             case 7:
-                Delete_LinkedList(HEAD);
+                Delete_Linked_list();
                 printf("Linked-list deleted\n\n");
                 break;
             case 8:
-                Print_LinkedList(HEAD);
+                Print_LinkedList();
                 break;
             case 0:
-                Delete_LinkedList(HEAD);
+                Delete_Linked_list();
                 break;
             default:
                 printf("Enter a valid choice\n\n");
@@ -76,148 +83,129 @@ int main(void){
     return 1;
 }
 
-node* Create_LinkedList(int _Value, node *_Head){
-    if(_Head != NULL)
-        return NULL;
+int Print_LinkedList(){
+    node *ptr = head;
+    while(ptr != NULL){
+        printf("%d(%p) -> ", ptr->val, ptr);
+        ptr = ptr->next;
+    }
+    printf("NULL\n");
+}
+node* Create_Linked_list(int _val){
+    if(head != NULL)
+        return;
 
     node *ptr = (node*)malloc(sizeof(node));
     if(ptr == NULL)
-    {
-        printf("Node creation failed\n\n");
-        return NULL;
-    }
-    ptr->val = _Value;
+        return; /* or print "error creating node\n" */
+    ptr->val = _val;
     ptr->next = NULL;
 
-    _Head = ptr;
-    return _Head;
-}
+    head = curr = ptr;
 
-node* Append_LinkedList(int _Value, node *_Head){
-    if(_Head == NULL)
-        return (Create_LinkedList(_Value, _Head));
+    return head;
+}
+node* Append_Linked_list(int _val){
+    if(head == NULL)
+        return Create_Linked_list(_val);
 
     node *ptr = (node*)malloc(sizeof(node));
     if(ptr == NULL)
-    {
-        printf("Node creation failed\n\n");
-        return NULL;
-    }
-    ptr->val = _Value;
+        return;
+    ptr->val = _val;
     ptr->next = NULL;
 
-    node* ptr2 = Last_Node(_Head);
-    ptr2->next = ptr;
+    curr->next = ptr;
+    curr = ptr;
 
-    return _Head;
+    return head;
 }
-
-node* Prepend_LinkedList(int _Value, node *_Head){
-    if(_Head == NULL)
-    {
-        _Head = Create_LinkedList(_Value, _Head);
-        return (_Head);
-    }
+node* Prepend_Linked_list(int _val){
+    if(head == NULL)
+        return Create_Linked_list(_val);
 
     node *ptr = (node*)malloc(sizeof(node));
     if(ptr == NULL)
-    {
-        printf("Node creation failed\n\n");
-        return NULL;
-    }
-    ptr->val = _Value;
-    ptr->next = NULL;
+        return;
+    ptr->val = _val;
+    ptr->next = head;
 
-    ptr->next = _Head;
-    _Head = ptr;
+    head = ptr;
 
-    return ptr;
+    return head;
 }
+int Search_Linked_list(int _val, node **_prev){
+    node *ptr;
 
-node* Delete_Node(int _Value, node *_Head){
-    node *prev = NULL,
-         *del = NULL,
-         *curr = Last_Node(_Head);
+    ptr = head;
 
-    int found = Search_LinkedList(_Value, _Head, &prev);
+    if(head->val == _val)
+        return 1;   /* found but no prev node (prev == NULL) */
 
-    if(found){
-        if(prev == NULL){
-            //head node to be deleted
-            del = _Head;
-            _Head = _Head->next;
+    while(ptr->next != NULL){
+        if(ptr->val == _val){
+            return 1;
         }
-        else{
-            if(prev->next == curr){
-                //last node to be deleted
-                del = curr;
-                curr = prev;
-                curr->next = NULL;
-            }
-            else{
-                //middle node to be deleted
-                del = prev->next;
-                prev->next = del->next;
-            }
-        }
+        _prev = ptr;
+        ptr = ptr->next;
     }
 
-    free(del);
-    del = NULL;
-
-    return _Head;
+    return 0; /* not found */
 }
+node* Delete_Node(int _val){
+    node **prev = NULL,
+         *ptr = NULL;
+    if(!Search_Linked_list(_val, prev))
+        return;
 
-node* Reverse_LinkedList(node *_Head){
+    if(head->val == _val){  /* or prev==NULL */
+        ptr = head;
+        head = head->next;
+        free(ptr);
+    }
+    else if(curr->val == _val){
+        ptr = curr;
+        curr = (*prev);
+        curr->next = NULL;
+        free(ptr);
+    }
+    else{
+        ptr = (*prev)->next;
+        (*prev)->next = ptr->next;
+        free(ptr);
+    }
 
+    return head;
 }
-
-int Length_Of_LinkedList(node *_Head){
+int Length_Of_Linked_list(){
+    node *ptr = head;
     int Length = 0;
-    node *ptr = _Head;
+
     while(ptr->next != NULL)
         Length++;
 
     return Length;
 }
+node* Reverse_Linked_list(){
+    int Len, i, j;
+    node *ptr;
 
-int Delete_LinkedList(node* _Head){
-    //delete and at last
-    _Head = NULL;
-}
+    Len = Length_Of_Linked_list();
+    if(Len == 1)
+        return head;
 
-int Print_LinkedList(node *_Head){
-    node *ptr = _Head;
-    while(ptr->next != NULL){
-        printf("%d(%p) -> ", ptr->val, ptr);
-        ptr = ptr->next;
-    }
-    printf("NULL\n\n");
-
-    return 1;
-}
-
-int Search_LinkedList(int _Value, node *_Head, node **Prev){
-    node *ptr = _Head;
-
-    if(ptr->val == _Value)
-        return 0;
-
-    while(ptr->next != NULL){
-        if(ptr->next->val == _Value){
-            *Prev = ptr;
-            return 1;
+    for(i=Len-1; i<=0; i--){
+        ptr = head;
+        for(j=0; j<i-1; j++){
+            node *ptr2 = ptr->next;
+            SWAP(ptr->val,ptr2->val);
         }
         ptr = ptr->next;
     }
 
-    return 0;
+    return head;
 }
+int Delete_Linked_list(){
 
-node* Last_Node(node *_Head){
-    node *ptr = _Head;
-    while(ptr->next != NULL)
-        ptr = ptr->next;
-
-    return ptr;
+    return 1;
 }
