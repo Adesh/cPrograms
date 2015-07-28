@@ -30,25 +30,25 @@ int main(void){
     int Option = 1;
     int Value;
     while(Option){
-        printf("1) Create linked-list\n2) Append linked-list\n3) Prepend linked-list\n4) Length Of linked-list\n5) Delete a node\n6) Reverse linked-list\n7) Delete linked-list\n8)Print linked-list\n0) Exit program\n");
+        printf("1) Create linked-list\n2) Append linked-list\n3) Prepend linked-list\n4) Length Of linked-list\n5) Delete a node\n6) Reverse linked-list\n7) Delete linked-list\n8) Print linked-list\n0) Exit program\n");
         scanf("%d", &Option);
 
         switch(Option){
             case 1:
                 printf("Enter a value: ");
-                scanf("%d", Value);
+                scanf("%d", &Value);
                 Create_Linked_list(Value);
                 printf("Linked-list created\n\n");
                 break;
             case 2:
                 printf("Enter a value: ");
-                scanf("%d", Value);
+                scanf("%d", &Value);
                 Append_Linked_list(Value);
                 printf("Value appended to Linked-list\n\n");
                 break;
             case 3:
                 printf("Enter a value: ");
-                scanf("%d", Value);
+                scanf("%d", &Value);
                 Prepend_Linked_list(Value);
                 printf("Value prepended to Linked-list\n\n");
                 break;
@@ -58,7 +58,7 @@ int main(void){
                 break;
             case 5:
                 printf("Enter a value: ");
-                scanf("%d", Value);
+                scanf("%d", &Value);
                 Delete_Node(Value);
                 printf("Value deleted from linked-list\n\n");
                 break;
@@ -89,14 +89,14 @@ int Print_LinkedList(){
         printf("%d(%p) -> ", ptr->val, ptr);
         ptr = ptr->next;
     }
-    printf("NULL\n");
+    printf("NULL\n\n");
 }
 node* Create_Linked_list(int _val){
-    if(head != NULL)
+    if(NULL != head)
         return;
 
     node *ptr = (node*)malloc(sizeof(node));
-    if(ptr == NULL)
+    if(NULL == ptr)
         return; /* or print "error creating node\n" */
     ptr->val = _val;
     ptr->next = NULL;
@@ -146,7 +146,7 @@ int Search_Linked_list(int _val, node **_prev){
         if(ptr->val == _val){
             return 1;
         }
-        _prev = ptr;
+        *_prev = ptr;
         ptr = ptr->next;
     }
 
@@ -181,10 +181,11 @@ int Length_Of_Linked_list(){
     node *ptr = head;
     int Length = 0;
 
-    while(ptr->next != NULL)
+    while(ptr->next != NULL){
         Length++;
-
-    return Length;
+        ptr = ptr->next;
+    }
+    return ++Length;
 }
 node* Reverse_Linked_list(){
     int Len, i, j;
@@ -197,8 +198,7 @@ node* Reverse_Linked_list(){
     for(i=Len-1; i<=0; i--){
         ptr = head;
         for(j=0; j<i-1; j++){
-            node *ptr2 = ptr->next;
-            SWAP(ptr->val,ptr2->val);
+            SWAP(ptr->val,ptr->next->val);
         }
         ptr = ptr->next;
     }
