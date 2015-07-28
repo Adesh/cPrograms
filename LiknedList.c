@@ -1,3 +1,21 @@
+/*
+
+-------------------------------------------------------------------------------
+  AUTHOR:    _(Adesh Shah)
+  DATE:      _(28JUL2015)
+  URL:       _(NULL)
+-------------------------------------------------------------------------------
+  FILE:      _(LinkedList.c)
+  INFO:      _(Linked-list operations)
+  FUNCTION:  _(main,Print_LinkedList,Create_Linked_list,Append_Linked_list,Prepend_Linked_list,Search_Linked_list,Delete_Node,Reverse_Linked_list,Length_Of_Linked_list,Delete_Linked_list)
+-------------------------------------------------------------------------------
+  CATEGORY:  _(linkedlist)
+  TAGS:      _(linkedlist,reverse)
+  LEVEL:     _(2)
+-------------------------------------------------------------------------------
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -195,12 +213,12 @@ node* Reverse_Linked_list(){
     if(Len == 1)
         return head;
 
-    for(i=Len-1; i<=0; i--){
+    for(i=Len; i>=0; i--){
         ptr = head;
         for(j=0; j<i-1; j++){
             SWAP(ptr->val,ptr->next->val);
+            ptr = ptr->next;
         }
-        ptr = ptr->next;
     }
 
     return head;
