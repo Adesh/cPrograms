@@ -43,7 +43,7 @@ int main(void){
     return 0;
 }
 
-void MergeSort(int* _Set, int _Low, int _High){
+void MergeSort(int* _Array, int _Low, int _High){
     int Mid;
     
     if(_Low < _High){
@@ -53,7 +53,7 @@ void MergeSort(int* _Set, int _Low, int _High){
         Merge(_Set, _Low, Mid, _High);
     }
 }
-void Merge(int* _Set, int _Low, int _Mid, int _High){
+void Merge(int* _Array, int _Low, int _Mid, int _High){
     int i = _Low,
         Mid = _Mid + 1,
         k,
@@ -61,28 +61,28 @@ void Merge(int* _Set, int _Low, int _Mid, int _High){
         TempSet[_LIMIT_];
 
     while( (Low <= _Mid) && (Mid <= _High)){
-    	if(_Set[Low] <= _Set[Mid])
-			TempSet[i++] = _Set[Low++];
+    	if(_Set[Low] <= _Array[Mid])
+			TempSet[i++] = _Array[Low++];
 		else
-			TempSet[i++] = _Set[Mid++];
+			TempSet[i++] = _Array[Mid++];
     }
     
     while(Low <= _Mid){
-    	TempSet[i++] = _Set[Low++];
+    	TempSet[i++] = _Array[Low++];
     }
     
     while(Mid <= _High){
-    	TempSet[i++] = _Set[Mid++];
+    	TempSet[i++] = _Array[Mid++];
     }
     
     for(k=_Low; k<=_High; k++)
-        _Set[k] = TempSet[k];
+        _Array[k] = TempSet[k];
 }
 
-void PrintArray(int *_Set){
+void PrintArray(int *_Array){
 	int i;
 	printf("\nArray: ");
 	for(i=0; i<_LIMIT_; i++)
-		printf("%d -> ", _Set[i]);
+		printf("%d -> ", _Array[i]);
 	printf("NULL\n");
 }
