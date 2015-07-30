@@ -14,11 +14,11 @@
   LEVEL:     _(2)
 -------------------------------------------------------------------------------
   Description:
-   ->On average, merge-sort does fewer comparisons than quick-sort, so it may be better when complicated comparison routines are used
+   -> On average, merge-sort does fewer comparisons than quick-sort, so it may be better when complicated comparison routines are used
    
-   ->Merge-sort also takes advantage of pre-existing order, so it would be favored for using sort() to merge several sorted arrays
+   -> Merge-sort also takes advantage of pre-existing order, so it would be favored for using sort() to merge several sorted arrays
    
-   ->On the other hand, quick-sort is often faster for small arrays, and on arrays of a few distinct values, repeated many times 
+   -> On the other hand, quick-sort is often faster for small arrays, and on arrays of a few distinct values, repeated many times 
                 
                 *Courtesy:http://perldoc.perl.org/sort.html
     
