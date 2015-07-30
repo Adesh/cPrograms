@@ -18,14 +18,11 @@
 
 #include <stdio.h>
 
-#define SWAP(a,b) if(a!=b){  \
-                   do{       \
-                     a^=b;   \
-                     b^=a;   \
-                     a^=b;   \
-                   }         \
-                   while(0); \
-                  }
+#define SWAP(a,b) do{                   \
+                    if(a!=b){           \
+                      a^=b; b^=a; a^=b; \
+                    }			\
+		    }while(0)  
 
 char* StrRev(char*);
 int StrLen(char*);
