@@ -19,19 +19,22 @@
 #include <stdio.h>
 #define _LIMIT_ 10
 
-void MergeSort(int*, int, int, int);
-void Merge(int*, int, int);
+void MergeSort(int*, int, int);
+void Merge(int*, int, int, int);
 void PrintArray(int*);
 
 int main(void){
-    int Set[_LIMIT_];
-    int Option = 1;
+    int Set[_LIMIT_],
+		Option = 1,
+		i;
     
     while(Option){
-        printf("Merge sort algorithm:\nRandomly creating array\n");
-        PrintArray();
-        MergeSort(Set);
-        PrintArray();
+        printf("Merge sort algorithm:\nPrint 10ss numbers\n");     
+		for(i=0; i<_LIMIT_; i++)
+			scanf("%d", &Set[i]);
+		PrintArray(Set);
+        MergeSort(Set, 0, _LIMIT_-1);
+        PrintArray(Set);
         
         printf("Do you want to continue?\nYes - 1\nExit - 0\n");
         scanf("%d", &Option);        
@@ -47,7 +50,7 @@ void MergeSort(int* _Set, int _Low, int _High){
         Mid=(_Low + _High)/2;
         MergeSort(_Set, _Low, Mid);
         MergeSort(_Set, Mid+1, _High);
-        MergeSort(_Set, _Low, Mid, _High);
+        Merge(_Set, _Low, Mid, _High);
     }
 }
 void Merge(int* _Set, int _Low, int _Mid, int _High){
@@ -55,24 +58,31 @@ void Merge(int* _Set, int _Low, int _Mid, int _High){
         Mid = _Mid + 1,
         k,
         Low = _Low, 
-        TempSet[MAX];
+        TempSet[_LIMIT_];
 
     while( (Low <= _Mid) && (Mid <= _High)){
-    
+    	if(_Set[Low] <= _Set[Mid])
+			TempSet[i++] = _Set[Low++];
+		else
+			TempSet[i++] = _Set[Mid++];
     }
     
     while(Low <= _Mid){
-    
+    	TempSet[i++] = _Set[Low++];
     }
     
     while(Mid <= _High){
-    
+    	TempSet[i++] = _Set[Mid++];
     }
     
-    for(k=low;k<=high;k++)
+    for(k=_Low; k<=_High; k++)
         _Set[k] = TempSet[k];
 }
 
 void PrintArray(int *_Set){
-
+	int i;
+	printf("\nArray: ");
+	for(i=0; i<_LIMIT_; i++)
+		printf("%d -> ", _Set[i]);
+	printf("NULL\n");
 }
