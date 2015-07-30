@@ -21,14 +21,11 @@
 
 #define _LIMIT_ 2*8 /* Limit in bits to hold HEX number */
 
-#define SWAP(a,b) if(a!=b){  \
-                   do{       \
-                     a^=b;   \
-                     b^=a;   \
-                     a^=b;   \
-                   }         \
-                   while(0); \
-                  }
+#define SWAP(a,b) do{                   \
+                    if(a!=b){           \
+                      a^=b; b^=a; a^=b; \
+                    }			\
+		  }while(0)  
 
 int Decimal2Binary(int);
 int Binary2Decimal(int);
