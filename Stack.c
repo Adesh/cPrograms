@@ -40,7 +40,7 @@ int main(){
 		printf("1) PUSH Stack\n2) POP Stack\n3) Prinr Stack\n0) Exit program\n"); 
 		scanf("%d", &Option);  
 		switch(Option){
-			case 1:
+		 case 1:
 		   printf("Enter a value: ");
 		   scanf("%d", &Value);
 		   Push(Value);
@@ -52,7 +52,7 @@ int main(){
 		   break;
 		 case 3:
 		   StackPrint();
-		 	 break;
+		   break;
 		 case 0:
 		   //DeleteStack();
 		   break;
