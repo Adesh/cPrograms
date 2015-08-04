@@ -31,7 +31,8 @@ node *ROOT = NULL;
 int COUNT = 0;
 
 int InsertInTree(int,node**);
-void PrintBinaryTree(node*,FILE*);
+void PrintBinaryTree_HTML(node*,FILE*);
+void PrintBinaryTree_XML(node*,FILE*);
 node* SearchBinaryTree(int,node*);
 int PreOrderTravarse(node*);
 int InOrderTravarse(node*);
@@ -50,14 +51,14 @@ int main(void){
     InsertInTree(9,&ROOT);printf("Tree height: %d\n\n", HeightBinaryTree(ROOT));
     InsertInTree(4,&ROOT);printf("Tree height: %d\n\n", HeightBinaryTree(ROOT));
     InsertInTree(5,&ROOT);printf("Tree height: %d\n\n", HeightBinaryTree(ROOT));
-    fp = fopen("BinaryTreeXML.xml", "w");
-    PrintBinaryTree(ROOT,fp);
+    fp = fopen("BinaryTreeHTML.html", "w");
+    PrintBinaryTree_HTML(ROOT,fp);
     fclose(fp);
     DeleteBinaryTree(ROOT);
     */
 
     Option = 0;
-    while(Option){
+    do{
         printf("1) Insert in BinaryTree\n2) Print BinaryTree\n3) Pre-order travarse\n4) In-order travarse\n5) Post-order travarse\n6) Print Height of B.Tree\n0) Exit program\n");
         scanf("%d", &Option);
 
@@ -70,7 +71,7 @@ int main(void){
                 break;
             case 2:
                 fp = fopen("BinaryTreeXML.txt", "w");
-                PrintBinaryTree(ROOT,fp);
+                PrintBinaryTree_HTML(ROOT,fp);
                 fclose(fp);
                 break;
             case 3:
@@ -92,7 +93,7 @@ int main(void){
             default:
                 printf("Enter a valid choice\n\n");
         }
-    }
+    }while(Option);
     return 1;
 }
 
@@ -168,7 +169,7 @@ unsigned int HeightBinaryTree(node *_Ptr){
     return height;
 }
 
-void PrintBinaryTree(node *_Ptr, FILE *fp){
+void PrintBinaryTree_XML(node *_Ptr, FILE *fp){
     if(_Ptr != NULL){
         if(_Ptr == ROOT){
             fprintf(fp,"<xml>\n");
@@ -180,7 +181,7 @@ void PrintBinaryTree(node *_Ptr, FILE *fp){
                 fprintf(fp,"<node type='Left' value='NULL'>\n");
         else{
                 fprintf(fp, "<node type='Left' value='%d'>\n", _Ptr->left->val);
-                PrintBinaryTree(_Ptr->left,fp);
+                PrintBinaryTree_XML(_Ptr->left,fp);
         }
         fprintf(fp,"</node>\n");
 
@@ -189,7 +190,7 @@ void PrintBinaryTree(node *_Ptr, FILE *fp){
             fprintf(fp, "<node type='Right' value='NULL'>\n");
         else{
             fprintf(fp,"<node type='Right' value='%d'>\n", _Ptr->right->val);
-            PrintBinaryTree(_Ptr->right,fp);
+            PrintBinaryTree_XML(_Ptr->right,fp);
         }
         fprintf(fp,"</node>\n");
     }
@@ -198,5 +199,40 @@ void PrintBinaryTree(node *_Ptr, FILE *fp){
         fprintf(fp,"</node>\n");    /* close ROOT node */
         fprintf(fp,"</xml>\n");
     }
+}
+
+void PrintBinaryTree_HTML(node *_Ptr, FILE *fp){
+    fprintf(fp,"<html><html><head><style>.nodeVal{position:relative;padding:5px;margin:5px;height:50px;width:50px;text-align:center;line-height: 50px;border:1px Solid #ADADAD;background:#f1f1f1;}.nodeROOT,.nodeLeft,.nodeRight{padding:5px 5px 5px 15px;margin:5px 5px 5px 15px;clear:both;}.nodeLeft{border-left:1px Solid Red;}.nodeRight{border-left:1px Solid Blue;}</style></head><body><div>");
+    if(_Ptr != NULL){
+        if(_Ptr == ROOT){
+            fprintf(fp,"<div class='BinaryTree'>\n");  /* XML start */
+            fprintf(fp,"<div class='nodeROOT'><div class='nodeVal'>%d</div>\n",_Ptr->val);
+        }
+
+        /* left child node */
+        if(_Ptr->left == NULL)
+                fprintf(fp,"<div class='nodeLeft'><div class='nodeVal'>NULL</div>\n");
+        else{
+                fprintf(fp, "<div class='nodeLeft'><div class='nodeVal'>%d</div>\n", _Ptr->left->val);
+                PrintBinaryTree_HTML(_Ptr->left,fp);
+        }
+        fprintf(fp,"</div>\n");
+
+        /* right node */
+        if(_Ptr->right == NULL)
+            fprintf(fp, "<div class='nodeRight'><div class='nodeVal'>NULL</div>\n");
+        else{
+            fprintf(fp,"<div class='nodeRight'><div class='nodeVal'>%d</div>\n", _Ptr->right->val);
+            PrintBinaryTree_HTML(_Ptr->right,fp);
+        }
+        fprintf(fp,"</div>\n");
+    }
+
+    if(_Ptr == ROOT){
+        fprintf(fp,"</div>\n");    /* close ROOT node */
+        fprintf(fp,"</div>\n"); /* XML end */
+    }
+    fprintf(fp,"</div></body></html>");
 
 }
+
